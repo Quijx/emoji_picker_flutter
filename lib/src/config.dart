@@ -11,33 +11,61 @@ const DefaultNoRecentsWidget = Text(
   textAlign: TextAlign.center,
 );
 
+/// A builder that creates a [Widget] to display an [emoji] at a given [emojiSize].
+typedef EmojiWidgetBuilder = Widget Function(
+  BuildContext context,
+  String emoji,
+  double emojiSize,
+);
+
+/// The default [EmojiWidgetBuilder].
+Widget defaultEmojiBuilder(
+  BuildContext context,
+  String emoji,
+  double emojiSize,
+) {
+  return Text(
+    emoji,
+    textScaleFactor: 1.0,
+    style: TextStyle(
+      fontSize: emojiSize,
+      backgroundColor: Colors.transparent,
+    ),
+  );
+}
+
 /// Config for customizations
 class Config {
   /// Constructor
-  const Config(
-      {this.columns = 7,
-      this.emojiSizeMax = 32.0,
-      this.verticalSpacing = 0,
-      this.horizontalSpacing = 0,
-      this.initCategory = Category.RECENT,
-      this.bgColor = const Color(0xFFEBEFF2),
-      this.indicatorColor = Colors.blue,
-      this.iconColor = Colors.grey,
-      this.iconColorSelected = Colors.blue,
-      this.progressIndicatorColor = Colors.blue,
-      this.backspaceColor = Colors.blue,
-      this.skinToneDialogBgColor = Colors.white,
-      this.skinToneIndicatorColor = Colors.grey,
-      this.enableSkinTones = true,
-      this.showRecentsTab = true,
-      this.recentsLimit = 28,
-      this.noRecents = DefaultNoRecentsWidget,
-      this.tabIndicatorAnimDuration = kTabScrollDuration,
-      this.categoryIcons = const CategoryIcons(),
-      this.buttonMode = ButtonMode.MATERIAL});
+  const Config({
+    this.columns = 7,
+    this.emojiWidgetBuilder = defaultEmojiBuilder,
+    this.emojiSizeMax = 32.0,
+    this.verticalSpacing = 0,
+    this.horizontalSpacing = 0,
+    this.initCategory = Category.RECENT,
+    this.bgColor = const Color(0xFFEBEFF2),
+    this.indicatorColor = Colors.blue,
+    this.iconColor = Colors.grey,
+    this.iconColorSelected = Colors.blue,
+    this.progressIndicatorColor = Colors.blue,
+    this.backspaceColor = Colors.blue,
+    this.skinToneDialogBgColor = Colors.white,
+    this.skinToneIndicatorColor = Colors.grey,
+    this.enableSkinTones = true,
+    this.showRecentsTab = true,
+    this.recentsLimit = 28,
+    this.noRecents = DefaultNoRecentsWidget,
+    this.tabIndicatorAnimDuration = kTabScrollDuration,
+    this.categoryIcons = const CategoryIcons(),
+    this.buttonMode = ButtonMode.MATERIAL,
+  });
 
   /// Number of emojis per row
   final int columns;
+
+  /// A builder used for creating a [Widget] to display an emoji.
+  final EmojiWidgetBuilder emojiWidgetBuilder;
 
   /// Width and height the emoji will be maximal displayed
   /// Can be smaller due to screen size and amount of columns

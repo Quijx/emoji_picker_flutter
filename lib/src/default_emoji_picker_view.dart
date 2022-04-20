@@ -215,26 +215,30 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
     // FittedBox needed for display, font scale settings
     return FittedBox(
       fit: BoxFit.fill,
-      child: Stack(children: [
-        emoji.hasSkinTone && showSkinToneIndicator
-            ? Positioned(
-                bottom: 0,
-                right: 0,
-                child: CustomPaint(
-                  size: const Size(8, 8),
-                  painter: TriangleShape(widget.config.skinToneIndicatorColor),
-                ),
-              )
-            : Container(),
-        Text(
-          emoji.emoji,
-          textScaleFactor: 1.0,
-          style: TextStyle(
-            fontSize: emojiSize,
-            backgroundColor: Colors.transparent,
+      child: Stack(
+        children: [
+          emoji.hasSkinTone && showSkinToneIndicator
+              ? Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: CustomPaint(
+                    size: const Size(8, 8),
+                    painter:
+                        TriangleShape(widget.config.skinToneIndicatorColor),
+                  ),
+                )
+              : Container(),
+          Builder(
+            builder: (context) {
+              return widget.config.emojiWidgetBuilder(
+                context,
+                emoji.emoji,
+                emojiSize,
+              );
+            },
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
