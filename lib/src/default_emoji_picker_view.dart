@@ -319,12 +319,12 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
     return SizedBox(
       width: width,
       height: width,
-      child: _buildButtonWidget(
+      child: _EmojiButton(
         onPressed: () {
           widget.state.onEmojiSelected(categoryEmoji.category, emoji);
           _closeSkinToneDialog();
         },
-        onLongPressed: () {},
+        buttonMode: widget.config.buttonMode,
         child: _buildEmoji(emojiSize, categoryEmoji, emoji, false),
       ),
     );
