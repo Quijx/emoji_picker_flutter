@@ -181,7 +181,7 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
             widget.state.onEmojiSelected(categoryEmoji.category, emoji);
           };
 
-          final onLongPressed = () {
+          final onLongPress = () {
             if (!emoji.hasSkinTone || !widget.config.enableSkinTones) {
               _closeSkinToneDialog();
               return;
@@ -190,9 +190,10 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
             _openSkinToneDialog(emoji, emojiSize, categoryEmoji, index);
           };
 
-          return _buildButtonWidget(
+          return _EmojiButton(
             onPressed: onPressed,
-            onLongPressed: onLongPressed,
+            onLongPress: onLongPress,
+            buttonMode: widget.config.buttonMode,
             child: _buildEmoji(
               emojiSize,
               categoryEmoji,
@@ -238,34 +239,6 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
             },
           ),
         ],
-      ),
-    );
-  }
-
-  /// Build different Button based on ButtonMode
-  Widget _buildButtonWidget({
-    required VoidCallback onPressed,
-    required VoidCallback onLongPressed,
-    required Widget child,
-  }) {
-    if (widget.config.buttonMode == ButtonMode.MATERIAL) {
-      return TextButton(
-        onPressed: onPressed,
-        onLongPress: onLongPressed,
-        child: child,
-        style: ButtonStyle(
-          padding: MaterialStateProperty.all(EdgeInsets.zero),
-          minimumSize: MaterialStateProperty.all(Size.zero),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-      );
-    }
-    return GestureDetector(
-      onLongPress: onLongPressed,
-      child: CupertinoButton(
-        padding: EdgeInsets.zero,
-        onPressed: onPressed,
-        child: child,
       ),
     );
   }
@@ -376,5 +349,47 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
           emojiWidth;
     }
     return -1 * ((_skinToneCount ~/ 2) * emojiWidth) + emojiWidth / 2;
+  }
+}
+
+/// Build different Button based on ButtonMode
+class _EmojiButton extends StatelessWidget {
+  const _EmojiButton({
+    Key? key,
+    required this.onPressed,
+    this.onLongPress,
+    required this.buttonMode,
+    required this.child,
+  }) : super(key: key);
+
+  final VoidCallback onPressed;
+  final VoidCallback? onLongPress;
+  final ButtonMode buttonMode;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    switch (buttonMode) {
+      case ButtonMode.MATERIAL:
+        return TextButton(
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          child: child,
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            minimumSize: MaterialStateProperty.all(Size.zero),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        );
+      case ButtonMode.CUPERTINO:
+        return GestureDetector(
+          onLongPress: onLongPress,
+          child: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: onPressed,
+            child: child,
+          ),
+        );
+    }
   }
 }
