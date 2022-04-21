@@ -163,19 +163,21 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
     // Build page normally
     return GestureDetector(
       onTap: _closeSkinToneDialog,
-      child: GridView.count(
+      child: GridView.builder(
         scrollDirection: Axis.vertical,
         physics: const ScrollPhysics(),
         controller: _scrollController,
         shrinkWrap: true,
         primary: false,
         padding: const EdgeInsets.all(0),
-        crossAxisCount: widget.config.columns,
-        mainAxisSpacing: widget.config.verticalSpacing,
-        crossAxisSpacing: widget.config.horizontalSpacing,
-        children: categoryEmoji.emoji.asMap().entries.map((item) {
-          final index = item.key;
-          final emoji = item.value;
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.config.columns,
+          mainAxisSpacing: widget.config.verticalSpacing,
+          crossAxisSpacing: widget.config.horizontalSpacing,
+        ),
+        itemCount: categoryEmoji.emoji.length,
+        itemBuilder: (context, index) {
+          final emoji = categoryEmoji.emoji[index];
           final onPressed = () {
             _closeSkinToneDialog();
             widget.state.onEmojiSelected(categoryEmoji.category, emoji);
@@ -201,7 +203,7 @@ class _DefaultEmojiPickerViewState extends State<DefaultEmojiPickerView>
               widget.config.enableSkinTones,
             ),
           );
-        }).toList(),
+        },
       ),
     );
   }
